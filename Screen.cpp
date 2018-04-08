@@ -22,9 +22,6 @@ Screen::Screen(const Screen& other)
 {
     m_screen = new char[m_width*m_height];
     
-    
-    draw(other);
-    
     for (int i = 0; i < m_width * m_height; ++i) {
             m_screen[i] = other.m_screen[i];
     }

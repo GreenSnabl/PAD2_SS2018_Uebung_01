@@ -40,15 +40,17 @@ void TicTacToe::play()
     
     Screen background(30,15);
     background.fill(' ');
-    Screen player1(player1name.size() + 1, 1);
-    Screen player2(player2name.size() + 1, 1);
+
+    Screen players(11, 2);
+    players.fill(' ');
+    
     Screen controlInstruction(30, 2);
     controlInstruction.fill(' ');
     controlInstruction.setString({0,0}, "Enter position ColRow ie.:");
     controlInstruction.setString({6,1}, "A1, a1, 11");
     
-    player1.setString({1,0}, player1name);
-    player2.setString({1,0}, player2name);
+    players.setString({1,0}, player1name);
+    players.setString({1,1}, player2name);
     
     
     Screen gamefield(7,7);
@@ -63,18 +65,23 @@ void TicTacToe::play()
    
     screen->addSubScreen(&background, {0,0}, "background");
     screen->addSubScreen(&gamefield, {7,3}, "gamefield");
-    screen->addSubScreen(&player1, {7,0}, "player1");
-    screen->addSubScreen(&player2, {7,1}, "player2");
+    screen->addSubScreen(&players, {7,0}, "players");
     screen->addSubScreen(&controlInstruction, {0,12}, "controlInstruction");
             
-    Screen winner(30,2);
-    winner.fill(' ');
-    winner.setString({4,0}, "The winner is: ");
-    
+
     
     
     while (true)
     {
+        if (takeTurn(player1name, 1, 'x')) return;
+        if (takeTurn(player2name, 2, 'o')) return;
+    }
+    
+    
+    /*
+    while (true)
+    {
+        
         screen->getSubScreen("player1")->setChar({0,0}, '>');
         screen->getSubScreen("player2")->setChar({0,0}, ' ');
         screen->draw();
@@ -117,8 +124,8 @@ void TicTacToe::play()
             screen->deleteSubScreen("controlInstruction");
             screen->draw();
             return;
-        }
-    }
+        } 
+    } */
     
 }
 
@@ -136,7 +143,7 @@ void TicTacToe::updateField(Screen* screen)
         }
 }
 
-bool TicTacToe::makeTurn(char c)
+bool TicTacToe::setSquare(char c)
 {
     string str;
     int x, y;
@@ -245,4 +252,37 @@ string TicTacToe::getName(std::string playerNr)
     screen->clearSubScreens();
     return input;
 
+}
+
+
+bool TicTacToe::takeTurn(const string& name, int playerNumber, char c) {
+        screen->getSubScreen("players")->setChar({0, (playerNumber + 1) % 2 }, '>');
+        screen->getSubScreen("players")->setChar({0,  playerNumber % 2      }, ' ');
+        screen->draw();
+        
+        if (setSquare(c)) {
+            Screen winner(30,3);
+            winner.fill(' ');
+            winner.setString({4,0}, "The winner is: ");
+            winner.setString({8,2}, name);
+            
+            screen->addSubScreen(&winner, {0,12}, "winner");
+            updateField(screen->getSubScreen("gamefield"));
+            screen->deleteSubScreen("controlInstruction");
+            screen->draw();
+            return true;
+        }
+        
+        updateField(screen->getSubScreen("gamefield"));
+        if (fieldFull()) {
+            Screen draw(30,2);
+            draw.fill(' ');
+            draw.setString({0,0}, "The game ended in a draw :(");
+            screen->addSubScreen(&draw, {0,13}, "draw");
+            updateField(screen->getSubScreen("gamefield"));
+            screen->deleteSubScreen("controlInstruction");
+            screen->draw();
+            return true;
+        }
+        return false;
 }

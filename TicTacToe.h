@@ -24,9 +24,12 @@ public:
     
 private:
 
-    bool makeTurn(char c);
+    bool setSquare(char c);
     void updateField(Screen* screen);
     string getName(string playerNr);
+    
+    
+    bool takeTurn(const string& name, int playerNumber, char c);
     
     
     int columnToInt(char c)  const;
