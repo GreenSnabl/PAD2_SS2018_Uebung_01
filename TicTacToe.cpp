@@ -37,7 +37,6 @@ void TicTacToe::play()
     player1name = getName("player 1");
     player2name = getName("player 2");
     
-    
     Screen background(30,15);
     background.fill(' ');
 
@@ -67,66 +66,12 @@ void TicTacToe::play()
     screen->addSubScreen(&gamefield, {7,3}, "gamefield");
     screen->addSubScreen(&players, {7,0}, "players");
     screen->addSubScreen(&controlInstruction, {0,12}, "controlInstruction");
-            
-
-    
-    
+                
     while (true)
     {
         if (takeTurn(player1name, 1, 'x')) return;
         if (takeTurn(player2name, 2, 'o')) return;
-    }
-    
-    
-    /*
-    while (true)
-    {
-        
-        screen->getSubScreen("player1")->setChar({0,0}, '>');
-        screen->getSubScreen("player2")->setChar({0,0}, ' ');
-        screen->draw();
-        if (makeTurn('x')) {
-            winner.setString({7,1}, player1name);
-            screen->addSubScreen(&winner, {0,13}, "winner");
-            updateField(screen->getSubScreen("gamefield"));
-            screen->deleteSubScreen("controlInstruction");
-            screen->draw();
-            return;
-        }
-        updateField(screen->getSubScreen("gamefield"));
-        if (fieldFull()) {
-            winner.fill(' ');
-            winner.setString({0,0}, "The game ended in a draw :(");
-            screen->addSubScreen(&winner, {0,13}, "winner");
-            updateField(screen->getSubScreen("gamefield"));
-            screen->deleteSubScreen("controlInstruction");
-            screen->draw();
-            return;
-        }
-        
-        screen->getSubScreen("player2")->setChar({0,0}, '>');
-        screen->getSubScreen("player1")->setChar({0,0}, ' ');
-        screen->draw();
-        if (makeTurn('o')) {
-            winner.setString({7,1}, player2name);
-            screen->addSubScreen(&winner, {0,13}, "winner");
-            updateField(screen->getSubScreen("gamefield"));
-            screen->deleteSubScreen("controlInstruction");
-            screen->draw();
-            return;
-        }
-        updateField(screen->getSubScreen("gamefield"));
-        if (fieldFull()) {
-            winner.fill(' ');
-            winner.setString({0,0}, "The game ended in a draw :(");
-            screen->addSubScreen(&winner, {0,13}, "winner");
-            updateField(screen->getSubScreen("gamefield"));
-            screen->deleteSubScreen("controlInstruction");
-            screen->draw();
-            return;
-        } 
-    } */
-    
+    }    
 }
 
 bool TicTacToe::winningCondition(char c) const
