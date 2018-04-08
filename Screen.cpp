@@ -22,8 +22,12 @@ Screen::Screen(const Screen& other)
 {
     m_screen = new char[m_width*m_height];
     
-    for (int i = 0; i < m_width * m_height; ++i)
+    
+    draw(other);
+    
+    for (int i = 0; i < m_width * m_height; ++i) {
             m_screen[i] = other.m_screen[i];
+    }
     
     for (int i = 0; i < other.m_screens.size(); ++i)
     {
@@ -85,7 +89,6 @@ void Screen::addSubScreen(Screen* subs, Pos2d anchor, const string& name)
     screenPointer->m_anchor = anchor;
     screenPointer->m_name = name;
     m_screens.push_back(screenPointer);
-    
     /*
     subs->m_anchor = anchor;
     subs->m_name = name;
@@ -107,7 +110,7 @@ bool Screen::deleteSubScreen(const string& name)
         if (m_screens[i]->m_name == name) {
             
             
-            //delete m_screens[i];
+            delete m_screens[i];
             
             
             m_screens.erase(m_screens.begin() + i);
