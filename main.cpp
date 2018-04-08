@@ -17,6 +17,20 @@
  * 
  */
 int main(int argc, char** argv) {
+    /*
+    Screen screen(20, 20);
+    
+    screen.fill('a');
+    screen.draw();
+    
+    Screen screen2(screen);
+    screen2.draw();
+    
+    Screen screen3(5, 5);
+    screen3.fill('5');
+    screen.addSubScreen(&screen3, {5,5}, "geier");
+    screen.draw();
+    */
     
     TicTacToe tic;
     tic.play();

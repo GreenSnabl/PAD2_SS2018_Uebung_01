@@ -18,16 +18,22 @@ Screen::Screen(int width, int height) : m_width {width}, m_height {height}
 
 
 Screen::Screen(const Screen& other) 
-    : m_width {other.m_width}, m_height {other.m_height} 
+    : m_width {other.m_width}, m_height{other.m_height}, m_name {other.m_name}, m_anchor {other.m_anchor} 
 {
+    m_screen = new char[m_width*m_height];
+    
+    for (int i = 0; i < m_width * m_height; ++i)
+            m_screen[i] = other.m_screen[i];
+    
     for (int i = 0; i < other.m_screens.size(); ++i)
     {
-        m_screens.push_back(other.m_screens[i]);    
+        addSubScreen(other.m_screens[i], other.m_screens[i]->m_anchor, other.m_screens[i]->m_name);        
     }
 }
 
 Screen::~Screen() 
 {
+    clearSubScreens();
     delete[] m_screen;
 }
 
@@ -74,15 +80,17 @@ void Screen::fill(char c)
 
 void Screen::addSubScreen(Screen* subs, Pos2d anchor, const string& name)
 {
-    /*
+    
     Screen* screenPointer = new Screen(*subs);
     screenPointer->m_anchor = anchor;
     screenPointer->m_name = name;
     m_screens.push_back(screenPointer);
-    */
+    
+    /*
     subs->m_anchor = anchor;
     subs->m_name = name;
     m_screens.push_back(subs);
+    */
 }
 
 Screen* Screen::getSubScreen(const string& name)
@@ -99,7 +107,7 @@ bool Screen::deleteSubScreen(const string& name)
         if (m_screens[i]->m_name == name) {
             
             
-           // delete m_screens[i];
+            //delete m_screens[i];
             
             
             m_screens.erase(m_screens.begin() + i);
@@ -144,7 +152,7 @@ void Screen::clearSubScreens()
 { 
     for (int i = m_screens.size() - 1; i >= 0; --i)
     {
-        //delete m_screens[i];
+        delete m_screens[i];
         m_screens.pop_back();
     }
 }
