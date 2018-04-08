@@ -15,22 +15,36 @@
 #include <iostream>
 #include <sstream>
 using std::cin;
+using std::ostringstream;
 
 
 TicTacToe::TicTacToe() {
-
+    screen = new Screen(30,15);
+    screen->fill(' ');
+    for (int i = 0; i < 9; ++i)
+    field[i] = ' ';
 }
 
 
-TicTacToe::~TicTacToe() {}
+TicTacToe::~TicTacToe() {
+    delete screen;
+}
 
 void TicTacToe::play()
 {
-    Screen screen(15, 15);
+    
+    string player1name, player2name;
+    
+    player1name = getName("player 1");
+    player2name = getName("player 2");
+    
+    Screen player1(player1name.size() + 1, 1);
+    Screen player2(player2name.size() + 1, 1);
+    
+    player1.setString({1,0}, player1name);
+    player2.setString({1,0}, player2name);
+    
     Screen gamefield(7,7);
-
-    screen.fill(' ');
-
     gamefield.setString({0,0},
             " A B C "
             "1 | | 1"
@@ -39,93 +53,60 @@ void TicTacToe::play()
             " ----- "
             "3 | | 3"
             " A B C ");
+   
+    screen->addSubScreen(&gamefield, {9,3}, "gamefield");
+    screen->addSubScreen(&player1, {9,0}, "player1");
+    screen->addSubScreen(&player2, {9,1}, "player2");
     
     Screen winner(15,2);
     winner.setString({0,0}, "The winner is: ");
     
-    string player1name, player2name;
-    cin >> player1name >> player2name;
     
-    Screen player1(player1name.size() + 1, 1);
-    Screen player2(player2name.size() + 1, 1);
-    
-    player1.setString({1,0}, player1name);
-    player2.setString({1,0}, player2name);
-    
-    for (int i = 0; i < 9; ++i)
-        field[i] = ' ';
-    
-    
-    
-    screen.addSubScreen(&player1, {1,0}, "player1");
-    screen.addSubScreen(&player2, {1,1}, "player2");
-    screen.addSubScreen(&gamefield, {3,3}, "gamefield");
     
     while (true)
     {
-        screen.getSubScreen("player1")->setChar({0,0}, '>');
-        screen.getSubScreen("player2")->setChar({0,0}, ' ');
-        screen.draw();
+        screen->getSubScreen("player1")->setChar({0,0}, '>');
+        screen->getSubScreen("player2")->setChar({0,0}, ' ');
+        screen->draw();
         if (makeTurn('x')) {
             winner.setString({0,1}, player1name);
-            screen.addSubScreen(&winner, {0,13}, "winner");
-            updateField(*screen.getSubScreen("gamefield"));
-            screen.draw();
+            screen->addSubScreen(&winner, {7,13}, "winner");
+            updateField(screen->getSubScreen("gamefield"));
+            screen->draw();
             return;
         }
-        updateField(*screen.getSubScreen("gamefield"));
-        if (fieldFull()) return;
+        updateField(screen->getSubScreen("gamefield"));
+        if (fieldFull()) {
+            winner.fill(' ');
+            winner.setString({0,0}, "The game ended in a draw :(");
+            screen->addSubScreen(&winner, {7,13}, "winner");
+            updateField(screen->getSubScreen("gamefield"));
+            screen->draw();
+            return;
+        }
         
-        screen.getSubScreen("player2")->setChar({0,0}, '>');
-        screen.getSubScreen("player1")->setChar({0,0}, ' ');
-        screen.draw();
+        screen->getSubScreen("player2")->setChar({0,0}, '>');
+        screen->getSubScreen("player1")->setChar({0,0}, ' ');
+        screen->draw();
         if (makeTurn('o')) {
             winner.setString({0,1}, player2name);
-            screen.addSubScreen(&winner, {0,13}, "winner");
-            updateField(*screen.getSubScreen("gamefield"));
-            screen.draw();
+            screen->addSubScreen(&winner, {7,13}, "winner");
+            updateField(screen->getSubScreen("gamefield"));
+            screen->draw();
             return;
         }
-        updateField(*screen.getSubScreen("gamefield"));
-        if (fieldFull()) return;
+        updateField(screen->getSubScreen("gamefield"));
+        if (fieldFull()) {
+            winner.fill(' ');
+            winner.setString({0,0}, "The game ended in a draw :(");
+            screen->addSubScreen(&winner, {7,13}, "winner");
+            updateField(screen->getSubScreen("gamefield"));
+            screen->draw();
+            return;
+        }
     }
     
 }
-/*
-bool TicTacToe::winningCondition(char c)
-{ 
-    int count = 0;
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j)
-        {
-            if (field[j + i*3] == c) ++count;        
-        }
-        if (count == 3) return true;
-    }
-    count = 0;
-
-    for (int i = 0; i < 3; ++i) {
-        for (int j = 0; j < 3; ++j) {
-        if (field[i + 3*j] == c) ++count;
-        }
-        if (count == 3) return true;
-    }
-    count = 0;
-    
-    for (int i = 0; i < 3; ++i)
-    {
-        if (field[i*4] == c) ++count;
-    }
-    if (count == 3) return true;
-    count = 0;
-    
-    for (int i = 1; i < 4; ++i) {
-        if (field[i*2] == c) ++count;
-    }
-    if (count == 3) return true;
-    return false;    
-}
-*/
 
 bool TicTacToe::winningCondition(char c)
 {
@@ -133,11 +114,11 @@ bool TicTacToe::winningCondition(char c)
 }
 
 
-void TicTacToe::updateField(Screen& screen)
+void TicTacToe::updateField(Screen* screen)
 {
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j) {
-            screen.setChar({1 + 2*j, 1 + 2*i}, field[j + i * 3]);
+            screen->setChar({1 + 2*j, 1 + 2*i}, field[j + i * 3]);
         }
 }
 
@@ -219,4 +200,34 @@ bool TicTacToe::fieldFull()
         if (field[i] == ' ') ++count;        
     }
     return count == 0;
+}
+
+string TicTacToe::getName(std::string playerNr)
+{
+    
+    string input;
+    ostringstream os;
+    Screen greeting(30, 15);
+    greeting.fill(' ');
+
+    
+    os << "Hello " << playerNr << "!";
+    greeting.setString({5,3},os.str());
+    greeting.setString({2,5},"Please enter your name");
+    greeting.setString({9,9}, "Length:");
+    greeting.setString({5,10}, "1-10 characters");
+    screen->addSubScreen(&greeting, {0,0}, "greeting");
+    screen->draw();
+    
+    while (true) {
+        cin >> input;
+        if (input.size() <= 10 && input.size() > 0) break;
+        
+        screen->getSubScreen("greeting")->setString({0,13}, "Please enter a valid name!");
+        screen->draw();
+    }
+    screen->clearSubScreens();
+    screen->fill(' ');
+    return input;
+
 }

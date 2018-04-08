@@ -116,3 +116,10 @@ void Screen::draw()
         cout << endl;
     }
 }
+
+void Screen::clearSubScreens()
+{ for (int i = 0; i < m_screens.size(); ++i)
+    {
+    m_screens.pop_back();
+    }
+}

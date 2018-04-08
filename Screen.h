@@ -42,6 +42,8 @@ public:
 	Screen* getSubScreen(const string& name);
         
         void setAnchor(Pos2d anchor);
+        
+        void clearSubScreens();
 
 private:
 	const int m_width;

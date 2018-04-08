@@ -20,12 +20,11 @@ public:
     TicTacToe();
     ~TicTacToe();
     void play();
-
     
 private:
     bool winningCondition(char c);
     bool makeTurn(char c);
-    void updateField(Screen& screen);
+    void updateField(Screen* screen);
     int columnToInt(char c);
     
     bool fieldFull();
@@ -33,7 +32,12 @@ private:
     bool checkCols(char c);
     bool checkDiagonal(char c);
     char field[9];
-
+    
+    string getName(string playerNr);
+    
+    
+    Screen* screen;
+    
 };
 
 #endif /* TICTACTOE_H */
