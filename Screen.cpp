@@ -74,6 +74,12 @@ void Screen::fill(char c)
 
 void Screen::addSubScreen(Screen* subs, Pos2d anchor, const string& name)
 {
+    /*
+    Screen* screenPointer = new Screen(*subs);
+    screenPointer->m_anchor = anchor;
+    screenPointer->m_name = name;
+    m_screens.push_back(screenPointer);
+    */
     subs->m_anchor = anchor;
     subs->m_name = name;
     m_screens.push_back(subs);
@@ -81,9 +87,26 @@ void Screen::addSubScreen(Screen* subs, Pos2d anchor, const string& name)
 
 Screen* Screen::getSubScreen(const string& name)
 {
-    for (int i = 0; i < m_screens.size(); ++i)
+    for (int i = 0; i < m_screens.size(); ++i){
         if (m_screens[i]->m_name == name) return m_screens[i];
+    }
     return nullptr;
+}
+
+bool Screen::deleteSubScreen(const string& name)
+{
+    for (int i = 0; i < m_screens.size(); ++i) {
+        if (m_screens[i]->m_name == name) {
+            
+            
+           // delete m_screens[i];
+            
+            
+            m_screens.erase(m_screens.begin() + i);
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -118,8 +141,10 @@ void Screen::draw()
 }
 
 void Screen::clearSubScreens()
-{ for (int i = 0; i < m_screens.size(); ++i)
+{ 
+    for (int i = m_screens.size() - 1; i >= 0; --i)
     {
-    m_screens.pop_back();
+        //delete m_screens[i];
+        m_screens.pop_back();
     }
 }

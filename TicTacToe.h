@@ -18,24 +18,26 @@
 class TicTacToe {
 public:
     TicTacToe();
+    TicTacToe(const TicTacToe&) = delete;
     ~TicTacToe();
     void play();
     
 private:
-    bool winningCondition(char c);
+
     bool makeTurn(char c);
     void updateField(Screen* screen);
-    int columnToInt(char c);
-    
-    bool fieldFull();
-    bool checkRows(char c);
-    bool checkCols(char c);
-    bool checkDiagonal(char c);
-    char field[9];
-    
     string getName(string playerNr);
     
     
+    int columnToInt(char c)  const;
+    
+    bool winningCondition(char c) const;
+    bool fieldFull() const;
+    bool checkRows(char c) const;
+    bool checkCols(char c) const;
+    bool checkDiagonal(char c) const;
+    
+    char field[9];
     Screen* screen;
     
 };

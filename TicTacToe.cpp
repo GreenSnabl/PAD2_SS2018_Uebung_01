@@ -20,7 +20,6 @@ using std::ostringstream;
 
 TicTacToe::TicTacToe() {
     screen = new Screen(30,15);
-    screen->fill(' ');
     for (int i = 0; i < 9; ++i)
     field[i] = ' ';
 }
@@ -38,11 +37,19 @@ void TicTacToe::play()
     player1name = getName("player 1");
     player2name = getName("player 2");
     
+    
+    Screen background(30,15);
+    background.fill(' ');
     Screen player1(player1name.size() + 1, 1);
     Screen player2(player2name.size() + 1, 1);
+    Screen controlInstruction(30, 2);
+    controlInstruction.fill(' ');
+    controlInstruction.setString({0,0}, "Enter position ColRow ie.:");
+    controlInstruction.setString({6,1}, "A1, a1, 11");
     
     player1.setString({1,0}, player1name);
     player2.setString({1,0}, player2name);
+    
     
     Screen gamefield(7,7);
     gamefield.setString({0,0},
@@ -54,12 +61,15 @@ void TicTacToe::play()
             "3 | | 3"
             " A B C ");
    
-    screen->addSubScreen(&gamefield, {9,3}, "gamefield");
-    screen->addSubScreen(&player1, {9,0}, "player1");
-    screen->addSubScreen(&player2, {9,1}, "player2");
-    
-    Screen winner(15,2);
-    winner.setString({0,0}, "The winner is: ");
+    screen->addSubScreen(&background, {0,0}, "background");
+    screen->addSubScreen(&gamefield, {7,3}, "gamefield");
+    screen->addSubScreen(&player1, {7,0}, "player1");
+    screen->addSubScreen(&player2, {7,1}, "player2");
+    screen->addSubScreen(&controlInstruction, {0,12}, "controlInstruction");
+            
+    Screen winner(30,2);
+    winner.fill(' ');
+    winner.setString({4,0}, "The winner is: ");
     
     
     
@@ -69,9 +79,10 @@ void TicTacToe::play()
         screen->getSubScreen("player2")->setChar({0,0}, ' ');
         screen->draw();
         if (makeTurn('x')) {
-            winner.setString({0,1}, player1name);
-            screen->addSubScreen(&winner, {7,13}, "winner");
+            winner.setString({7,1}, player1name);
+            screen->addSubScreen(&winner, {0,13}, "winner");
             updateField(screen->getSubScreen("gamefield"));
+            screen->deleteSubScreen("controlInstruction");
             screen->draw();
             return;
         }
@@ -79,8 +90,9 @@ void TicTacToe::play()
         if (fieldFull()) {
             winner.fill(' ');
             winner.setString({0,0}, "The game ended in a draw :(");
-            screen->addSubScreen(&winner, {7,13}, "winner");
+            screen->addSubScreen(&winner, {0,13}, "winner");
             updateField(screen->getSubScreen("gamefield"));
+            screen->deleteSubScreen("controlInstruction");
             screen->draw();
             return;
         }
@@ -89,9 +101,10 @@ void TicTacToe::play()
         screen->getSubScreen("player1")->setChar({0,0}, ' ');
         screen->draw();
         if (makeTurn('o')) {
-            winner.setString({0,1}, player2name);
-            screen->addSubScreen(&winner, {7,13}, "winner");
+            winner.setString({7,1}, player2name);
+            screen->addSubScreen(&winner, {0,13}, "winner");
             updateField(screen->getSubScreen("gamefield"));
+            screen->deleteSubScreen("controlInstruction");
             screen->draw();
             return;
         }
@@ -99,8 +112,9 @@ void TicTacToe::play()
         if (fieldFull()) {
             winner.fill(' ');
             winner.setString({0,0}, "The game ended in a draw :(");
-            screen->addSubScreen(&winner, {7,13}, "winner");
+            screen->addSubScreen(&winner, {0,13}, "winner");
             updateField(screen->getSubScreen("gamefield"));
+            screen->deleteSubScreen("controlInstruction");
             screen->draw();
             return;
         }
@@ -108,7 +122,7 @@ void TicTacToe::play()
     
 }
 
-bool TicTacToe::winningCondition(char c)
+bool TicTacToe::winningCondition(char c) const
 {
     return (checkCols(c) || checkRows(c) || checkDiagonal(c));
 }
@@ -131,15 +145,17 @@ bool TicTacToe::makeTurn(char c)
     
     x = columnToInt(str[0]);
     y = columnToInt(str[1]);
+    if (x < 3 && x >= 0 && y < 3 && y >= 0) {
     if (field[x + y * 3] == ' '){
         field[x + y * 3] = c;
         break;
-        }
+     }
+    }
     }
     return winningCondition(c);
 }
 
-int TicTacToe::columnToInt(char c)
+int TicTacToe::columnToInt(char c)  const
 {
     switch (c) {
         case 'A': case 'a': case '1': return 0;
@@ -148,7 +164,7 @@ int TicTacToe::columnToInt(char c)
     }
 }
 
-bool TicTacToe::checkRows(char c)
+bool TicTacToe::checkRows(char c) const
 {
     int count = 0;
     for (int i = 0; i < 3; ++i) {
@@ -162,7 +178,7 @@ bool TicTacToe::checkRows(char c)
     return false;
 }
 
-bool TicTacToe::checkCols(char c)
+bool TicTacToe::checkCols(char c) const
 {
     int count = 0;
     for (int i = 0; i < 3; ++i) {
@@ -175,7 +191,7 @@ bool TicTacToe::checkCols(char c)
     return false;
 }
 
-bool TicTacToe::checkDiagonal(char c)
+bool TicTacToe::checkDiagonal(char c) const
 {
     int count = 0;
     for (int i = 0; i < 3; ++i)
@@ -192,7 +208,7 @@ bool TicTacToe::checkDiagonal(char c)
     return false;   
 }
 
-bool TicTacToe::fieldFull()
+bool TicTacToe::fieldFull() const
 {
     int count = 0;
     for (int i = 0; i < 9; ++i)
@@ -227,7 +243,6 @@ string TicTacToe::getName(std::string playerNr)
         screen->draw();
     }
     screen->clearSubScreens();
-    screen->fill(' ');
     return input;
 
 }

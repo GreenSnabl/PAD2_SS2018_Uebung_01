@@ -40,9 +40,9 @@ public:
 
 	void addSubScreen(Screen* subs, Pos2d anchor, const string& name);
 	Screen* getSubScreen(const string& name);
-        
         void setAnchor(Pos2d anchor);
         
+        bool deleteSubScreen(const string& name);        
         void clearSubScreens();
 
 private:
