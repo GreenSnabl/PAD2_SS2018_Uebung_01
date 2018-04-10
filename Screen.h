@@ -31,6 +31,9 @@ public:
 	char& getChar(Pos2d pos);
 	void setChar(Pos2d pos, char c);
 
+        void setVisibility(bool visibile);
+        bool getVisibility() const;
+        
 	void setString(Pos2d pos, const string& item);
 	void setInt(Pos2d pos, const int& item);
 
@@ -49,6 +52,9 @@ private:
 	const int m_width;
 	const int m_height;
 	char* m_screen;
+        
+        bool m_visible;
+        
 	string m_name;
 	Pos2d m_anchor;
 	vector<Screen*> m_screens;

@@ -11,14 +11,14 @@
 using std::cout; using std::endl; using std::setw;
 
 
-Screen::Screen(int width, int height) : m_width {width}, m_height {height} 
+Screen::Screen(int width, int height) : m_width {width}, m_height {height}, m_visible {true} 
 {
     m_screen = new char[m_width*m_height];
 }
 
 
 Screen::Screen(const Screen& other) 
-    : m_width {other.m_width}, m_height{other.m_height}, m_name {other.m_name}, m_anchor {other.m_anchor} 
+    : m_width {other.m_width}, m_height{other.m_height}, m_name {other.m_name}, m_anchor {other.m_anchor}, m_visible {other.m_visible} 
 {
     m_screen = new char[m_width*m_height];
     
@@ -53,6 +53,17 @@ void Screen::setChar(Pos2d pos, char c)
 {
     m_screen[pos.x + m_width * pos.y] = c;
 }
+
+void Screen::setVisibility(bool visible)
+{
+    m_visible = visible;
+}
+
+bool Screen::getVisibility() const
+{
+    return m_visible;
+}
+
 
 void Screen::setString(Pos2d pos, const string& item)
 {
@@ -139,7 +150,10 @@ void Screen::draw(Screen& s)
 void Screen::draw()
 {
     for (int i = 0; i < m_screens.size(); ++i)
+    {
+        if (m_screens[i]->getVisibility())
         draw(*m_screens[i]);
+    }
     for (int i = 0; i < m_height; ++i) {
         for (int j = 0; j < m_width; ++j){
             cout << setw(2) << m_screen[j + i * m_width];
