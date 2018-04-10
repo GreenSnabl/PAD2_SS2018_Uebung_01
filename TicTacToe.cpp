@@ -22,30 +22,14 @@ TicTacToe::TicTacToe() {
     screen = new Screen(30,15);
     for (int i = 0; i < 9; ++i)
     field[i] = ' ';
-}
-
-
-TicTacToe::~TicTacToe() {
-    delete screen;
-}
-
-void TicTacToe::play()
-{
     
-    string player1name, player2name;
-    
-    player1name = getName("player 1");
-    player2name = getName("player 2");
-    
-    Screen background(30,15);
+        Screen background(30,15);
     screen->addSubScreen(&background, {0,0}, "background");
     screen->getSubScreen("background")->fill(' ');
 
     Screen players(11, 2);
     screen->addSubScreen(&players, {7,0}, "players");
     screen->getSubScreen("players")->fill(' ');
-    screen->getSubScreen("players")->setString({1,0}, player1name);
-    screen->getSubScreen("players")->setString({1,1}, player2name);
     
     Screen controlInstruction(30, 2);
     screen->addSubScreen(&controlInstruction, {0,12}, "controlInstruction");
@@ -75,6 +59,27 @@ void TicTacToe::play()
     screen->getSubScreen("draw")->fill(' ');
     screen->getSubScreen("draw")->setString({0,0}, "The game ended in a draw :(");        
     screen->getSubScreen("draw")->setVisibility(false);
+    
+    
+}
+
+
+TicTacToe::~TicTacToe() {
+    delete screen;
+}
+
+void TicTacToe::play()
+{
+    
+    string player1name, player2name;
+    
+    screen->getSubScreen("players")->setString({1,0}, player1name);
+    screen->getSubScreen("players")->setString({1,1}, player2name);
+    
+    player1name = getName("player 1");
+    player2name = getName("player 2");
+    
+
     
     while (true)
     {
