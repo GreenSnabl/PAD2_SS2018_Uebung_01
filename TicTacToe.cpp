@@ -170,21 +170,19 @@ bool TicTacToe::fieldFull() const
     return count == 0;
 }
 
-string TicTacToe::getName(std::string playerNr)
+string TicTacToe::getName(std::string playerName)
 {
     
     string input;
     ostringstream os;
     Screen greeting(30, 15);
-    greeting.fill(' ');
-
-    
-    os << "Hello " << playerNr << "!";
-    greeting.setString({5,3},os.str());
-    greeting.setString({2,5},"Please enter your name");
-    greeting.setString({9,9}, "Length:");
-    greeting.setString({5,10}, "1-10 characters");
     screen->addSubScreen(&greeting, {0,0}, "greeting");
+    screen->getSubScreen("greeting")->fill(' ');   
+    os << "Hello " << playerName << "!";
+    screen->getSubScreen("greeting")->setString({5,3},os.str());
+    screen->getSubScreen("greeting")->setString({2,5},"Please enter your name");
+    screen->getSubScreen("greeting")->setString({9,9}, "Length:");
+    screen->getSubScreen("greeting")->setString({5,10}, "1-10 characters");
     screen->draw();
     
     while (true) {
@@ -220,10 +218,10 @@ bool TicTacToe::takeTurn(const string& name, int playerNumber, char c) {
         
         updateField(screen->getSubScreen("gamefield"));
         if (fieldFull()) {
-            Screen draw(30,2);
-            draw.fill(' ');
-            draw.setString({0,0}, "The game ended in a draw :(");
+            Screen draw(27,1);
             screen->addSubScreen(&draw, {0,13}, "draw");
+            screen->getSubScreen("draw")->fill(' ');
+            screen->getSubScreen("draw")->setString({0,0}, "The game ended in a draw :(");
             updateField(screen->getSubScreen("gamefield"));
             screen->deleteSubScreen("controlInstruction");
             screen->draw();

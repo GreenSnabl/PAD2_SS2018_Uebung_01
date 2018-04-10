@@ -26,7 +26,7 @@ private:
 
     bool setSquare(char c);
     void updateField(Screen* screen);
-    string getName(string playerNr);
+    string getName(string playerName);
     
     
     bool takeTurn(const string& name, int playerNumber, char c);
