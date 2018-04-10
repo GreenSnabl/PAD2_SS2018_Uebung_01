@@ -20,10 +20,11 @@ using std::ostringstream;
 
 TicTacToe::TicTacToe() {
     screen = new Screen(30,15);
-    for (int i = 0; i < 9; ++i)
-    field[i] = ' ';
+    for (int i = 0; i < 9; ++i) {
+        field[i] = ' ';
+    }
     
-        Screen background(30,15);
+    Screen background(30,15);
     screen->addSubScreen(&background, {0,0}, "background");
     screen->getSubScreen("background")->fill(' ');
 
@@ -73,12 +74,11 @@ void TicTacToe::play()
     
     string player1name, player2name;
     
-    screen->getSubScreen("players")->setString({1,0}, player1name);
-    screen->getSubScreen("players")->setString({1,1}, player2name);
-    
     player1name = getName("player 1");
     player2name = getName("player 2");
     
+    screen->getSubScreen("players")->setString({1,0}, player1name);
+    screen->getSubScreen("players")->setString({1,1}, player2name);
 
     
     while (true)
@@ -206,7 +206,7 @@ string TicTacToe::getName(std::string playerName)
         screen->getSubScreen("greeting")->setString({0,13}, "Please enter a valid name!");
         screen->draw();
     }
-    screen->clearSubScreens();
+    screen->deleteSubScreen("greeting");
     return input;
 
 }
