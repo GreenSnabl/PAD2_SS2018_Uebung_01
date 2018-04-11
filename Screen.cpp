@@ -75,11 +75,7 @@ void Screen::setString(Pos2d pos, const string& item)
 
 void Screen::setInt(Pos2d pos, const int& item)
 {
-    string str = std::to_string(item);
-    for (int i = 0; i < str.size(); ++i) {
-        //m_screen[i + pos.x + m_width * pos.y] = str[i];
-        setString(pos, str);
-    }
+      setString(pos, std::to_string(item));
 }
 
 void Screen::fill(char c)
