@@ -61,7 +61,9 @@ bool Screen::getVisibility() const {
 void Screen::setString(Pos2d pos, const string& item) {
     for (int i = 0; i < item.size(); ++i) {
         //m_screen[i + pos.x + m_width * pos.y] = item[i];
-        setChar({pos.x + i, pos.y}, item[i]);
+        if((pos.x + i + pos.y * m_width) < m_width * m_height) {
+            setChar({pos.x + i, pos.y}, item[i]);
+    }
     }
 }
 
